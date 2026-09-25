@@ -46,9 +46,10 @@
         }
 
         #splash-screen img {
-            width: 320px;
-            max-width: 85%;
+            width: 85%;
+            max-width: 450px;
             margin-bottom: 20px;
+            border-radius: 8px;
             animation: pulse 2s infinite;
         }
 
@@ -61,14 +62,14 @@
 
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50% { transform: scale(1.03); }
             100% { transform: scale(1); }
         }
 
         /* Contenedor Principal */
         .container {
             background: #ffffff;
-            padding: 40px;
+            padding: 30px;
             border-radius: 12px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             width: 100%;
@@ -82,9 +83,12 @@
             margin-bottom: 25px;
         }
 
+        /* AQUÍ ESTÁ EL CAMBIO: width al 100% para que cubra todo el ancho */
         .logo-container img {
-            width: 220px;
-            max-width: 100%;
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
         }
 
         h1 {
@@ -208,7 +212,7 @@
 </head>
 <body>
 
-    <!-- Pantalla de Splash con la nueva imagen -->
+    <!-- Pantalla de Splash con la imagen cubriendo -->
     <div id="splash-screen">
         <img src="logossedenl.jpeg" alt="Logos Sede NL">
         <h2>Cargando experiencia...</h2>
