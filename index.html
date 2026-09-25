@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Asistencia - OCV Monterrey</title>
+    <style>
+        :root {
+            --primary-orange: #e65c00;
+            --dark-orange: #b34700;
+            --light-orange: #ff944d;
+            --bg-gradient: linear-gradient(135deg, #cc4400 0%, #ff8533 50%, #e65c00 100%);
+            --text-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Splash Screen */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease;
+        }
+
+        #splash-screen img {
+            width: 280px;
+            max-width: 80%;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        #splash-screen h2 {
+            color: #ffffff;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Main Container */
+        .container {
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 480px;
+            margin: 20px;
+            display: none; /* Se muestra después del splash */
+        }
+
+        .logo-container {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo-container img {
+            width: 200px;
+        }
+
+        h1 {
+            color: var(--dark-orange);
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        p.subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .radio-card {
+            flex: 1;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .radio-card input {
+            display: none;
+        }
+
+        .radio-card.selected-si {
+            border-color: #28a745;
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .radio-card.selected-no {
+            border-color: #dc3545;
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus {
+            border-color: var(--primary-orange);
+        }
+
+        #hidden-fields {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            background-color: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: var(--dark-orange);
+        }
+
+        #success-message {
+            display: none;
+            text-align: center;
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 18px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Pantalla de Splash -->
+    <div id="splash-screen">
+        <!-- Reemplaza con la ruta de tu logo -->
+        <img src="logotipo-ocv-monterrey.svg" alt="OCV Monterrey">
+        <h2>Cargando experiencia...</h2>
+    </div>
+
+    <!-- Contenido Principal / Formulario -->
+    <div class="container" id="main-content">
+        <div class="logo-container">
+            <img src="logotipo-ocv-monterrey.svg" alt="OCV Monterrey">
+        </div>
+        <h1>Confirmación de Evento</h1>
+        <p class="subtitle">Sede Nuevo León - OCV Monterrey</p>
+
+        <form id="rsvp-form">
+            <div class="form-group">
+                <label>¿Confirma su asistencia al evento?</label>
+                <div class="radio-group">
+                    <label class="radio-card" id="card-si">
+                        <input type="radio" name="asistencia" value="Si" required> Sí, asistiré
+                    </label>
+                    <label class="radio-card" id="card-no">
+                        <input type="radio" name="asistencia" value="No"> No podré asistir
+                    </label>
+                </div>
+            </div>
+
+            <div id="hidden-fields">
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo:</label>
+                    <input type="text" id="nombre" name="nombre" placeholder="Ingrese su nombre">
+                </div>
+
+                <div class="form-group">
+                    <label for="correo">Correo Electrónico:</label>
+                    <input type="email" id="correo" name="correo" placeholder="correo@ejemplo.com">
+                </div>
+            </div>
+
+            <button type="submit" id="submit-btn">Enviar Respuesta</button>
+        </form>
+
+        <div id="success-message">
+            ¡Muchas gracias por su respuesta! La información ha sido enviada correctamente.
+        </div>
+    </div>
+
+    <script>
+        // Ocultar Splash después de 2.5 segundos
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                const main = document.getElementById('main-content');
+                splash.style.opacity = '0';
+                setTimeout(() => {
+                    splash.style.display = 'none';
+                    main.style.display = 'block';
+                }, 800);
+            }, 2000);
+        });
+
+        // Control de campos condicionales (Sí / No)
+        const radios = document.querySelectorAll('input[name="asistencia"]');
+        const hiddenFields = document.getElementById('hidden-fields');
+        const cardSi = document.getElementById('card-si');
+        const cardNo = document.getElementById('card-no');
+        const nombreInput = document.getElementById('nombre');
+        const correoInput = document.getElementById('correo');
+
+        radios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.value === 'Si') {
+                    hiddenFields.style.display = 'block';
+                    nombreInput.required = true;
+                    correoInput.required = true;
+                    cardSi.classList.add('selected-si');
+                    cardNo.classList.remove('selected-no');
+                } else {
+                    hiddenFields.style.display = 'none';
+                    nombreInput.required = false;
+                    correoInput.required = false;
+                    nombreInput.value = '';
+                    correoInput.value = '';
+                    cardNo.classList.add('selected-no');
+                    cardSi.classList.remove('selected-si');
+                }
+            });
+        });
+
+        // Manejo del envío del formulario
+        const form = document.getElementById('rsvp-form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const asistencia = document.querySelector('input[name="asistencia"]:checked').value;
+            const nombre = nombreInput.value;
+            const correo = correoInput.value;
+
+            // Destinatarios solicitados
+            const destinatarios = ["jarriaga090@gmail.com", "perla.leal@ocvmty.com.mx"];
+
+            // Simulación de envío de correo (Para producción, se recomienda conectar con EmailJS o un endpoint backend)
+            console.log("Enviando datos a:", destinatarios);
+            console.log({ asistencia, nombre, correo });
+
+            // Mostrar mensaje de éxito
+            form.style.display = 'none';
+            document.getElementById('success-message').style.display = 'block';
+
+            // Nota de integración real: 
+            // Si usas EmailJS, puedes disparar aquí la función emailjs.send(...) apuntando a los correos indicados.
+        });
+    </script>
+</body>
+</html>
