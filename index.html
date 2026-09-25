@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmación de Asistencia - OCV Monterrey</title>
+    <title>Confirmación de Evento - OCV Monterrey</title>
     <style>
         :root {
             --primary-orange: #e65c00;
@@ -29,7 +29,7 @@
             align-items: center;
         }
 
-        /* Splash Screen */
+        /* Pantalla de Splash / Bienvenida */
         #splash-screen {
             position: fixed;
             top: 0;
@@ -56,6 +56,7 @@
             color: #ffffff;
             font-weight: 300;
             letter-spacing: 2px;
+            font-size: 16px;
         }
 
         @keyframes pulse {
@@ -64,7 +65,7 @@
             100% { transform: scale(1); }
         }
 
-        /* Main Container */
+        /* Contenedor Principal */
         .container {
             background: #ffffff;
             padding: 40px;
@@ -73,7 +74,7 @@
             width: 100%;
             max-width: 480px;
             margin: 20px;
-            display: none; /* Se muestra después del splash */
+            display: none; /* Oculto inicialmente hasta que pase el splash */
         }
 
         .logo-container {
@@ -186,6 +187,14 @@
             background-color: var(--dark-orange);
         }
 
+        #loading-spinner {
+            display: none;
+            text-align: center;
+            color: var(--dark-orange);
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
         #success-message {
             display: none;
             text-align: center;
@@ -198,14 +207,13 @@
 </head>
 <body>
 
-    <!-- Pantalla de Splash -->
+    <!-- Pantalla de Splash con Logotipo -->
     <div id="splash-screen">
-        <!-- Reemplaza con la ruta de tu logo -->
         <img src="logotipo-ocv-monterrey.svg" alt="OCV Monterrey">
         <h2>Cargando experiencia...</h2>
     </div>
 
-    <!-- Contenido Principal / Formulario -->
+    <!-- Contenido Principal del Formulario -->
     <div class="container" id="main-content">
         <div class="logo-container">
             <img src="logotipo-ocv-monterrey.svg" alt="OCV Monterrey">
@@ -226,6 +234,7 @@
                 </div>
             </div>
 
+            <!-- Campos condicionales que aparecen solo si selecciona Sí -->
             <div id="hidden-fields">
                 <div class="form-group">
                     <label for="nombre">Nombre Completo:</label>
@@ -239,6 +248,7 @@
             </div>
 
             <button type="submit" id="submit-btn">Enviar Respuesta</button>
+            <div id="loading-spinner">Enviando información...</div>
         </form>
 
         <div id="success-message">
@@ -247,7 +257,7 @@
     </div>
 
     <script>
-        // Ocultar Splash después de 2.5 segundos
+        // Control del Splash Screen (se oculta tras 2 segundos)
         window.addEventListener('load', () => {
             setTimeout(() => {
                 const splash = document.getElementById('splash-screen');
@@ -260,7 +270,7 @@
             }, 2000);
         });
 
-        // Control de campos condicionales (Sí / No)
+        // Lógica condicional para mostrar nombre y correo si dice "Sí"
         const radios = document.querySelectorAll('input[name="asistencia"]');
         const hiddenFields = document.getElementById('hidden-fields');
         const cardSi = document.getElementById('card-si');
@@ -288,28 +298,46 @@
             });
         });
 
-        // Manejo del envío del formulario
+        // Envío de datos mediante fetch hacia Google Apps Script
         const form = document.getElementById('rsvp-form');
+        const submitBtn = document.getElementById('submit-btn');
+        const loadingSpinner = document.getElementById('loading-spinner');
+
         form.addEventListener('submit', (e) => {
             e.preventDefault();
-            
-            const asistencia = document.querySelector('input[name="asistencia"]:checked').value;
-            const nombre = nombreInput.value;
-            const correo = correoInput.value;
 
-            // Destinatarios solicitados
-            const destinatarios = ["jarriaga090@gmail.com", "perla.leal@ocvmty.com.mx"];
+            submitBtn.style.display = 'none';
+            loadingSpinner.style.display = 'block';
 
-            // Simulación de envío de correo (Para producción, se recomienda conectar con EmailJS o un endpoint backend)
-            console.log("Enviando datos a:", destinatarios);
-            console.log({ asistencia, nombre, correo });
+            const asistenciaValue = document.querySelector('input[name="asistencia"]:checked').value;
+            const formData = {
+                asistencia: asistenciaValue,
+                nombre: nombreInput.value,
+                correo: correoInput.value
+            };
 
-            // Mostrar mensaje de éxito
-            form.style.display = 'none';
-            document.getElementById('success-message').style.display = 'block';
+            // URL configurada de tu Google Apps Script
+            const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxtQc1iTRNANF5IJ-_nnDreH30dHET-bNGH6kasa5onPHgWhZ8LTjzGvWbBg1y2cigHyw/exec';
 
-            // Nota de integración real: 
-            // Si usas EmailJS, puedes disparar aquí la función emailjs.send(...) apuntando a los correos indicados.
+            fetch(WEB_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Necesario para llamadas externas a Apps Script
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(() => {
+                form.style.display = 'none';
+                loadingSpinner.style.display = 'none';
+                document.getElementById('success-message').style.display = 'block';
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Hubo un error al enviar la información. Por favor intente de nuevo.');
+                submitBtn.style.display = 'block';
+                loadingSpinner.style.display = 'none';
+            });
         });
     </script>
 </body>
