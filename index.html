@@ -46,8 +46,8 @@
         }
 
         #splash-screen img {
-            width: 280px;
-            max-width: 80%;
+            width: 320px;
+            max-width: 85%;
             margin-bottom: 20px;
             animation: pulse 2s infinite;
         }
@@ -83,7 +83,8 @@
         }
 
         .logo-container img {
-            width: 200px;
+            width: 220px;
+            max-width: 100%;
         }
 
         h1 {
@@ -207,16 +208,16 @@
 </head>
 <body>
 
-    <!-- Pantalla de Splash con Logotipo -->
+    <!-- Pantalla de Splash con la nueva imagen -->
     <div id="splash-screen">
-        <img src="logotipo-ocv-monterrey.svg" alt="OCV Monterrey">
+        <img src="logotipos sede nl.jpg.jpeg" alt="Logos Sede NL">
         <h2>Cargando experiencia...</h2>
     </div>
 
     <!-- Contenido Principal del Formulario -->
     <div class="container" id="main-content">
         <div class="logo-container">
-            <img src="logotipo-ocv-monterrey.svg" alt="OCV Monterrey">
+            <img src="logotipos sede nl.jpg.jpeg" alt="Logos Sede NL">
         </div>
         <h1>Confirmación de Evento</h1>
         <p class="subtitle">Sede Nuevo León - OCV Monterrey</p>
@@ -316,12 +317,11 @@
                 correo: correoInput.value
             };
 
-            // URL configurada de tu Google Apps Script
             const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxtQc1iTRNANF5IJ-_nnDreH30dHET-bNGH6kasa5onPHgWhZ8LTjzGvWbBg1y2cigHyw/exec';
 
             fetch(WEB_APP_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Necesario para llamadas externas a Apps Script
+                mode: 'no-cors',
                 headers: {
                     'Content-Type': 'application/json'
                 },
